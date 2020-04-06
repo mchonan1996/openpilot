@@ -30,7 +30,7 @@ class IsoTpParallelQuery():
 
   def rx(self):
     """Drain can socket and sort messages into buffers based on address"""
-    can_packets = messaging.drain_sock(self.logcan, wait_for_one=True)
+    can_packets = messaging.drain_sock(self.logcan, wait_for_one=False)
 
     for packet in can_packets:
       for msg in packet.can:

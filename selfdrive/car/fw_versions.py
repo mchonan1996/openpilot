@@ -12,6 +12,10 @@ import panda.python.uds as uds
 from cereal import car
 Ecu = car.CarParams.Ecu
 
+# 0 - white/grey panda connected to OBD2
+# 1 - black panda/comma two + CPv2 connected to OBD2
+bus = 1
+
 def p16(val):
   return struct.pack("!H", val)
 
@@ -42,6 +46,10 @@ TOYOTA_VERSION_RESPONSE = b'\x5a\x88\x01'
 OBD_VERSION_REQUEST = b'\x09\x04'
 OBD_VERSION_RESPONSE = b'\x49\x04'
 
+SUBARU_VERSION_REQUEST= b'\x22\xf1\x82'
+SUBARU_VERSION_RESPONSE= b'\x62\xf1\x82'
+
+
 
 REQUESTS = [
   # Honda
@@ -61,6 +69,11 @@ REQUESTS = [
   (
     [TESTER_PRESENT_REQUEST, DEFAULT_DIAGNOSTIC_REQUEST, EXTENDED_DIAGNOSTIC_REQUEST, UDS_VERSION_REQUEST],
     [TESTER_PRESENT_RESPONSE, DEFAULT_DIAGNOSTIC_RESPONSE, EXTENDED_DIAGNOSTIC_RESPONSE, UDS_VERSION_RESPONSE]
+  ),
+  # Subaru
+  (
+    [SUBARU_VERSION_REQUEST],
+    [SUBARU_VERSION_RESPONSE]
   )
 ]
 
@@ -186,13 +199,13 @@ if __name__ == "__main__":
 
   t = time.time()
   print("Getting vin...")
-  addr, vin = get_vin(logcan, sendcan, 1, retry=10, debug=args.debug)
+  addr, vin = get_vin(logcan, sendcan, bus, retry=10, debug=args.debug)
   print(f"VIN: {vin}")
   print("Getting VIN took %.3f s" % (time.time() - t))
   print()
 
   t = time.time()
-  fw_vers = get_fw_versions(logcan, sendcan, 1, extra=extra, debug=args.debug, progress=True)
+  fw_vers = get_fw_versions(logcan, sendcan, bus, extra=extra, debug=args.debug, progress=True)
   candidates = match_fw_to_car(fw_vers)
 
   print()
