@@ -32,7 +32,7 @@ def get_supported_pids():
 if __name__ == "__main__":
   panda = Panda()
   panda.set_safety_mode(Panda.SAFETY_ELM327)
-  panda.can_clear(0)
+  panda.can_clear(bus)
 
   # 09 02 = Get VIN
   isotp_send(panda, b"\x09\x02", 0x7e0, bus)
