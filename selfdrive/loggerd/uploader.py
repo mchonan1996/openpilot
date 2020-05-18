@@ -166,7 +166,7 @@ class Uploader():
       if url_resp.status_code == 412:
         self.last_resp = url_resp
         return
-        
+
       url_resp_json = json.loads(url_resp.text)
       url = url_resp_json['url']
       headers = url_resp_json['headers']
@@ -248,7 +248,7 @@ def uploader_fn(exit_event):
     allow_raw_upload = (params.get("IsUploadRawEnabled") != b"0")
     on_hotspot = is_on_hotspot()
     on_wifi = is_on_wifi()
-    should_upload = on_wifi and not on_hotspot
+    should_upload = not on_hotspot
 
     if exit_event.is_set():
       return
