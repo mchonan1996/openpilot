@@ -18,6 +18,10 @@ class CarState(CarStateBase):
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
 
+    self.es_distance_msg = copy.copy(cp_cam.vl["ES_Distance"])
+    self.es_dashstatus_msg = copy.copy(cp_cam.vl["ES_DashStatus"])
+    self.es_lkas_msg = copy.copy(cp_cam.vl["ES_LKAS_State"])
+
     ret.gas = cp.vl["Throttle"]['Throttle_Pedal'] / 255.
     ret.gasPressed = ret.gas > 1e-5
     ret.brakePressed = cp.vl["Brake_Pedal"]['Brake_Pedal'] > 1e-5
@@ -50,7 +54,8 @@ class CarState(CarStateBase):
 
     ret.cruiseState.enabled = cp.vl["CruiseControl"]['Cruise_Activated'] != 0
     ret.cruiseState.available = cp.vl["CruiseControl"]['Cruise_On'] != 0
-    ret.cruiseState.speed = cp_cam.vl["ES_DashStatus"]['Cruise_Set_Speed'] * CV.KPH_TO_MS
+
+    ret.cruiseState.speed = es_dashstatus_msg['Cruise_Set_Speed'] * CV.KPH_TO_MS
     # EDM Impreza: 1 = mph, UDM Forester: 7 = mph
     if cp.vl["Dash_State"]['Units'] in [1, 7]:
       ret.cruiseState.speed *= CV.MPH_TO_KPH
@@ -60,9 +65,6 @@ class CarState(CarStateBase):
                         cp.vl["BodyInfo"]['DOOR_OPEN_RL'],
                         cp.vl["BodyInfo"]['DOOR_OPEN_FR'],
                         cp.vl["BodyInfo"]['DOOR_OPEN_FL']])
-
-    self.es_distance_msg = copy.copy(cp_cam.vl["ES_Distance"])
-    self.es_lkas_msg = copy.copy(cp_cam.vl["ES_LKAS_State"])
 
     return ret
 
