@@ -15,7 +15,7 @@ class CarInterface(CarInterfaceBase):
     ret = CarInterfaceBase.get_std_params(candidate, fingerprint, has_relay)
 
     ret.carName = "subaru"
-    ret.radarOffCan = True
+    ret.radarOffCan = False
     ret.safetyModel = car.CarParams.SafetyModel.subaru
 
     # Subaru port is a community feature, since we don't own one to test
