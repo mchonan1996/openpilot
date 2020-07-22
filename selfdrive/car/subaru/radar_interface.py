@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
+import os
+import time
+from cereal import car
+from opendbc.can.parser import CANParser
 from selfdrive.car.interfaces import RadarInterfaceBase
+from selfdrive.car.subaru.values import DBC
 
 def get_eyesight_can_parser(CP):
   signals = [
