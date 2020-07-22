@@ -35,6 +35,8 @@ class CarControllerParams():
     self.BRAKE_MAX = 400
     self.BRAKE_SCALE = 1000            # from testing
 
+    self.ES_DISTANCE_FACTOR = 5
+
 ACCEL_HYST_GAP = 10  # don't change accel command for small oscilalitons within this value
 
 def accel_hysteresis(accel, accel_steady):
@@ -113,6 +115,13 @@ class CarController():
     #  actuators.brake = 0.5
     #  print("wipers set brake 0.5")
     #  brake_cmd = True
+
+    if frame % 20:
+      es_distance_raw = CS.es_dashstatus_msg['Far_Distance']
+      es_distance_conv = es_distance_raw * P.ES_DISTANCE_FACTOR
+
+      print('ES Far_Distance RAW', es_distance_raw)
+      print('ES Far_Distance CONVERTED', (es_distance_raw * (es_distance_conv * 2 + 5) / 2)) # Get mid point between speed thresholds.
 
     if enabled and actuators.brake > 0:
       brake_value = clip(int(actuators.brake * P.BRAKE_SCALE), P.BRAKE_MIN, P.BRAKE_MAX)
