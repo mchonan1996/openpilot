@@ -40,10 +40,8 @@ class CarController():
 
     if frame % 20:
       es_distance_raw = CS.es_dashstatus_msg['Far_Distance']
-      es_distance_conv = es_distance_raw * P.ES_DISTANCE_FACTOR
-
       print('ES Far_Distance RAW', es_distance_raw)
-      print('ES Far_Distance CONVERTED', (es_distance_raw * (es_distance_conv * 2 + 5) / 2)) # Get mid point between speed thresholds.
+      print('ES Far_Distance CONVERTED', (es_distance_raw * P.ES_DISTANCE_FACTOR)) # Get mid point between speed thresholds.
 
     ### STEER ###
 
