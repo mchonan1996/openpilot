@@ -65,6 +65,7 @@ class CarState(CarStateBase):
                         cp.vl["BodyInfo"]['DOOR_OPEN_FR'],
                         cp.vl["BodyInfo"]['DOOR_OPEN_FL']])
 
+    self.es_dashstatus_msg = copy.copy(cp_cam.vl["ES_DashStatus"])
     self.es_distance_msg = copy.copy(cp_cam.vl["ES_Distance"])
     self.es_lkas_msg = copy.copy(cp_cam.vl["ES_LKAS_State"])
 
@@ -118,6 +119,7 @@ class CarState(CarStateBase):
     signals = [
       ("Cruise_Set_Speed", "ES_DashStatus", 0),
       ("Conventional_Cruise", "ES_DashStatus", 0),
+      ("Far_Distance", "ES_DashStatus", 0),
 
       ("Counter", "ES_Distance", 0),
       ("Signal1", "ES_Distance", 0),

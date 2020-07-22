@@ -16,6 +16,9 @@ class CarControllerParams():
     self.STEER_DRIVER_FACTOR = 1       # from dbc
 
 
+    self.ES_DISTANCE_FACTOR = 5
+
+
 class CarController():
   def __init__(self, dbc_name, CP, VM):
     self.lkas_active = False
@@ -34,6 +37,13 @@ class CarController():
 
     # Send CAN commands.
     can_sends = []
+
+    if frame % 20:
+      es_distance_raw = CS.es_dashstatus_msg['Far_Distance']
+      es_distance_conv = es_distance_raw * P.ES_DISTANCE_FACTOR
+
+      print('ES Far_Distance RAW', es_distance_raw)
+      print('ES Far_Distance CONVERTED', (es_distance_raw * (es_distance_conv * 2 + 5) / 2)) # Get mid point between speed thresholds.
 
     ### STEER ###
 

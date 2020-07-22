@@ -169,6 +169,8 @@ class RadarD():
     if has_radar:
       dat.radarState.leadOne = get_lead(self.v_ego, self.ready, clusters, sm['model'].lead, low_speed_override=True)
       dat.radarState.leadTwo = get_lead(self.v_ego, self.ready, clusters, sm['model'].leadFuture, low_speed_override=False)
+      if frame % 20:
+        print('MODEL LEAD DIST', sm['model'].lead.dist) # log the model distance
     return dat
 
 
