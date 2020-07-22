@@ -37,7 +37,7 @@ class CarController():
     # Send CAN commands.
     can_sends = []
 
-    if frame % 20:
+    if frame % 1000:
       es_distance_raw = CS.es_dashstatus_msg['Far_Distance']
       print('ES Far_Distance RAW', es_distance_raw)
       print('ES Far_Distance CONVERTED', (es_distance_raw * P.ES_DISTANCE_FACTOR)) # Get mid point between speed thresholds.
