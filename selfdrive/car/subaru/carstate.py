@@ -55,7 +55,7 @@ class CarState(CarStateBase):
     ret.cruiseState.enabled = cp.vl["CruiseControl"]['Cruise_Activated'] != 0
     ret.cruiseState.available = cp.vl["CruiseControl"]['Cruise_On'] != 0
 
-    ret.cruiseState.speed = es_dashstatus_msg['Cruise_Set_Speed'] * CV.KPH_TO_MS
+    ret.cruiseState.speed = self.es_dashstatus_msg['Cruise_Set_Speed'] * CV.KPH_TO_MS
     # EDM Impreza: 1 = mph, UDM Forester: 7 = mph
     if cp.vl["Dash_State"]['Units'] in [1, 7]:
       ret.cruiseState.speed *= CV.MPH_TO_KPH
