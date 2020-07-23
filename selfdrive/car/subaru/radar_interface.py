@@ -63,11 +63,10 @@ class RadarInterface(RadarInterfaceBase):
       close_distance = cpt['ES_Distance']['Close_Distance']
 
       self.pts[0] = car.RadarData.RadarPoint.new_message()
-      self.pts[0].trackId = self.track_id
-      self.track_id += 1
+      self.pts[0].trackId = 1
       self.pts[0].dRel = (close_distance * 6 / 255) if close_distance < 255 else (far_distance * 5) # from front of car
-      self.pts[0].yRel = float('nan')  # in car frame's y axis, left is negative
-      self.pts[0].vRel = float('nan')
+      self.pts[0].yRel = 0  # in car frame's y axis, left is negative
+      self.pts[0].vRel = 0
       self.pts[0].aRel = float('nan')
       self.pts[0].yvRel = float('nan')
       self.pts[0].measured = (close_distance < 255)
