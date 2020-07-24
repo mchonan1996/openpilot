@@ -45,6 +45,7 @@ class RadarInterface(RadarInterfaceBase):
       return None
 
     rr = self._update(self.updated_messages)
+    print('RI: rr', rr)
     self.updated_messages.clear()
 
     return rr
@@ -58,30 +59,26 @@ class RadarInterface(RadarInterfaceBase):
     ret.errors = errors
 
     valid = cpt["ES_DashStatus"]['Car_Follow'] == 1
+    print('RI: Valid', valid)
     if valid:
       far_distance = cpt['ES_DashStatus']['Far_Distance']
+      print('RI: far_distance', far_distance)
       close_distance = cpt['ES_Distance']['Close_Distance']
+      print('RI: close_distance', close_distance)
 
-      self.pts[0] = car.RadarData.RadarPoint.new_message()
-      self.pts[0].trackId = 1
-      self.pts[0].dRel = (close_distance * 6 / 255) if close_distance < 255 else (far_distance * 5) # from front of car
-      self.pts[0].yRel = 0  # in car frame's y axis, left is negative
-      self.pts[0].vRel = 0
-      self.pts[0].aRel = float('nan')
-      self.pts[0].yvRel = float('nan')
-      self.pts[0].measured = (close_distance < 255)
-
-      # for ii in range(2):
-      #   if ii not in self.pts:
-      #     self.pts[ii] = car.RadarData.RadarPoint.new_message()
-      #     self.pts[ii].trackId = self.track_id
-      #     self.track_id += 1
-      #   self.pts[ii].dRel = cpt["SCC11"]['ACC_ObjDist']  # from front of car
-      #   self.pts[ii].yRel = -cpt["SCC11"]['ACC_ObjLatPos']  # in car frame's y axis, left is negative
-      #   self.pts[ii].vRel = cpt["SCC11"]['ACC_ObjRelSpd']
-      #   self.pts[ii].aRel = float('nan')
-      #   self.pts[ii].yvRel = float('nan')
-      #   self.pts[ii].measured = True
+      for ii in range(2):
+        if ii not in self.pts:
+          self.pts[ii] = car.RadarData.RadarPoint.new_message()
+          self.pts[ii].trackId = self.track_id
+          self.track_id += 1
+        my_drel = (close_distance * 6 / 255) if close_distance < 255 else (far_distance * 5) # from front of car
+        print('RI: my_drel', my_drel)
+        self.pts[ii].dRel = my_drel
+        self.pts[ii].yRel = 0 # in car frame's y axis, left is negative
+        self.pts[ii].vRel = 0
+        self.pts[ii].aRel = float('nan')
+        self.pts[ii].yvRel = float('nan')
+        self.pts[ii].measured = (close_distance < 255)
 
     ret.points = list(self.pts.values())
     return ret
