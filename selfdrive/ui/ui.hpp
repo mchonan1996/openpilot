@@ -126,6 +126,8 @@ typedef struct UIScene {
   cereal::ControlsState::Reader controls_state;
   cereal::DriverState::Reader driver_state;
   cereal::DMonitoringState::Reader dmonitoring_state;
+
+  bool lowbeamActive;
 } UIScene;
 
 typedef struct {

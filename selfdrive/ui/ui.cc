@@ -366,6 +366,9 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.is_rhd = scene.dmonitoring_state.getIsRHD();
     scene.frontview = scene.dmonitoring_state.getIsPreview();
   }
+  if (sm.updated("carState")) {
+    scene.lowbeamActive = sm["carState"].lowbeam;
+  }
 
   // timeout on frontview
   if ((sm.frame - sm.rcv_frame("dMonitoringState")) > 1*UI_FREQ) {
@@ -748,11 +751,13 @@ int main(int argc, char* argv[]) {
     double u1 = millis_since_boot();
 
     // light sensor is only exposed on EONs
-    float clipped_brightness = (s->light_sensor*brightness_m) + brightness_b;
-    if (clipped_brightness > 512) clipped_brightness = 512;
-    smooth_brightness = clipped_brightness * 0.01 + smooth_brightness * 0.99;
-    if (smooth_brightness > 255) smooth_brightness = 255;
-    ui_set_brightness(s, (int)smooth_brightness);
+    float lowbeam_brightness_factor = s->scene.lowbeamActive ? 0.2 : 1;
+    float headlight_based_brightness = (lowbeam_brightness_factor * brightness_m) + brightness_b;
+    // float clipped_brightness = (s->light_sensor*brightness_m) + brightness_b;
+    // if (clipped_brightness > 512) clipped_brightness = 512;
+    // smooth_brightness = clipped_brightness * 0.01 + smooth_brightness * 0.99;
+    // if (smooth_brightness > 255) smooth_brightness = 255;
+    ui_set_brightness(s, (int)headlight_based_brightness);
 
     // resize vision for collapsing sidebar
     const bool hasSidebar = !s->scene.uilayout_sidebarcollapsed;
