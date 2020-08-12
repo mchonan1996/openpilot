@@ -67,7 +67,7 @@ class CarState(CarStateBase):
                         cp.vl["BodyInfo"]['DOOR_OPEN_RL'],
                         cp.vl["BodyInfo"]['DOOR_OPEN_FR'],
                         cp.vl["BodyInfo"]['DOOR_OPEN_FL']])
-    ret.lowbeam = cp.vl['BodyInfo']['Lowbeam']
+    ret.lowbeam = False
 
     if self.car_fingerprint in PREGLOBAL_CARS:
       ret.steerError = cp.vl["Steering_Torque"]["LKA_Lockout"] == 1
@@ -75,6 +75,7 @@ class CarState(CarStateBase):
       self.ready = not cp_cam.vl["ES_DashStatus"]["Not_Ready_Startup"]
       self.es_accel_msg = copy.copy(cp_cam.vl["ES_CruiseThrottle"])
     else:
+      ret.lowbeam = cp.vl['BodyInfo']['Lowbeam']
       ret.steerError = cp.vl["Steering_Torque"]['Steer_Error_1'] == 1
       ret.steerWarning = cp.vl["Steering_Torque"]['Steer_Warning'] == 1
       ret.cruiseState.nonAdaptive = cp_cam.vl["ES_DashStatus"]['Conventional_Cruise'] == 1
@@ -105,7 +106,6 @@ class CarState(CarStateBase):
       ("DOOR_OPEN_FL", "BodyInfo", 1),
       ("DOOR_OPEN_RR", "BodyInfo", 1),
       ("DOOR_OPEN_RL", "BodyInfo", 1),
-      ("Lowbeam", "BodyInfo", 1),
       ("Units", "Dash_State", 1),
       ("Gear", "Transmission", 0),
       ("L_ADJACENT", "BSD_RCTA", 0),
@@ -132,6 +132,7 @@ class CarState(CarStateBase):
       signals += [
         ("Steer_Error_1", "Steering_Torque", 0),
         ("Steer_Warning", "Steering_Torque", 0),
+        ("Lowbeam", "BodyInfo", 1),
       ]
 
       checks += [

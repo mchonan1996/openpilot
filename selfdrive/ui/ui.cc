@@ -367,7 +367,7 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.frontview = scene.dmonitoring_state.getIsPreview();
   }
   if (sm.updated("carState")) {
-    scene.lowbeamActive = sm["carState"].lowbeam;
+    scene.lowbeamActive = sm["carState"].getCarState().getLowbeam();
   }
 
   // timeout on frontview
@@ -732,7 +732,7 @@ int main(int argc, char* argv[]) {
     write_param_float(brightness_m, "BRIGHTNESS_M", true);
   }
 
-  float smooth_brightness = brightness_b;
+  // float smooth_brightness = brightness_b;
 
   const int MIN_VOLUME = LEON ? 12 : 9;
   const int MAX_VOLUME = LEON ? 15 : 12;
