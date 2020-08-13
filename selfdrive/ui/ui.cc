@@ -732,7 +732,7 @@ int main(int argc, char* argv[]) {
     write_param_float(brightness_m, "BRIGHTNESS_M", true);
   }
 
-  // float smooth_brightness = brightness_b;
+  float smooth_brightness = brightness_b;
 
   const int MIN_VOLUME = LEON ? 12 : 9;
   const int MAX_VOLUME = LEON ? 15 : 12;
@@ -752,15 +752,14 @@ int main(int argc, char* argv[]) {
 
     // light sensor is only exposed on EONs
     float lowbeam_brightness_factor = s->scene.lowbeamActive ? 0.35 : 1;
-    if (s->started) {
+    if (!s->started) {
       lowbeam_brightness_factor = 0.5;
     }
-    float headlight_based_brightness = (lowbeam_brightness_factor * brightness_m) + brightness_b;
-    // float clipped_brightness = (s->light_sensor*brightness_m) + brightness_b;
-    // if (clipped_brightness > 512) clipped_brightness = 512;
-    // smooth_brightness = clipped_brightness * 0.01 + smooth_brightness * 0.99;
-    // if (smooth_brightness > 255) smooth_brightness = 255;
-    ui_set_brightness(s, (int)headlight_based_brightness);
+    float clipped_brightness = (lowbeam_brightness_factor * brightness_m) + brightness_b;
+    if (clipped_brightness > 512) clipped_brightness = 512;
+    smooth_brightness = clipped_brightness * 0.01 + smooth_brightness * 0.99;
+    if (smooth_brightness > 255) smooth_brightness = 255;
+    ui_set_brightness(s, (int)smooth_brightness);
 
     // resize vision for collapsing sidebar
     const bool hasSidebar = !s->scene.uilayout_sidebarcollapsed;
