@@ -75,7 +75,7 @@ class CarState(CarStateBase):
       self.ready = not cp_cam.vl["ES_DashStatus"]["Not_Ready_Startup"]
       self.es_accel_msg = copy.copy(cp_cam.vl["ES_CruiseThrottle"])
     else:
-      ret.lowbeam = cp.vl['BodyInfo']['Lowbeam']
+      ret.lowbeam = cp.vl['BodyInfo']['Lowbeam'] == 1
       ret.steerError = cp.vl["Steering_Torque"]['Steer_Error_1'] == 1
       ret.steerWarning = cp.vl["Steering_Torque"]['Steer_Warning'] == 1
       ret.cruiseState.nonAdaptive = cp_cam.vl["ES_DashStatus"]['Conventional_Cruise'] == 1
