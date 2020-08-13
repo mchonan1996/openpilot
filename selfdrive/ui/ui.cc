@@ -755,6 +755,8 @@ int main(int argc, char* argv[]) {
     if (!s->started) {
       lowbeam_brightness_factor = 128;
     }
+    LOGD("lowbeam_brightness_factor %.2f", lowbeam_brightness_factor);
+    LOGD("light_sensor %.2f", s->light_sensor);
     float clipped_brightness = (lowbeam_brightness_factor * brightness_m) + brightness_b;
     if (clipped_brightness > 512) clipped_brightness = 512;
     smooth_brightness = clipped_brightness * 0.01 + smooth_brightness * 0.99;
