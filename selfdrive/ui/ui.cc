@@ -751,7 +751,10 @@ int main(int argc, char* argv[]) {
     double u1 = millis_since_boot();
 
     // light sensor is only exposed on EONs
-    float lowbeam_brightness_factor = s->scene.lowbeamActive ? 0.2 : 1;
+    float lowbeam_brightness_factor = s->scene.lowbeamActive ? 0.35 : 1;
+    if (s->started) {
+      lowbeam_brightness_factor = 0.5;
+    }
     float headlight_based_brightness = (lowbeam_brightness_factor * brightness_m) + brightness_b;
     // float clipped_brightness = (s->light_sensor*brightness_m) + brightness_b;
     // if (clipped_brightness > 512) clipped_brightness = 512;
