@@ -751,9 +751,9 @@ int main(int argc, char* argv[]) {
     double u1 = millis_since_boot();
 
     // light sensor is only exposed on EONs
-    float lowbeam_brightness_factor = s->scene.lowbeamActive ? 0.35 : 1;
+    float lowbeam_brightness_factor = s->scene.lowbeamActive ? 89 : 255;
     if (!s->started) {
-      lowbeam_brightness_factor = 0.5;
+      lowbeam_brightness_factor = 128;
     }
     float clipped_brightness = (lowbeam_brightness_factor * brightness_m) + brightness_b;
     if (clipped_brightness > 512) clipped_brightness = 512;
