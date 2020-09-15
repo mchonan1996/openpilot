@@ -230,7 +230,7 @@ def uploader_fn(exit_event):
     offroad = params.get("IsOffroad") == b'1'
     allow_raw_upload = (params.get("IsUploadRawEnabled") != b"0") and offroad
     if offroad and counter % 12 == 0:
-      on_wifi = is_on_wifi()
+      on_wifi = True
     counter += 1
 
     d = uploader.next_file_to_upload(with_raw=allow_raw_upload and on_wifi and offroad)
