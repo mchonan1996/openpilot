@@ -118,16 +118,12 @@ class LateralPlanner():
         else:  # If there are no blinkers we will go back to LaneChangeState.off
           self.lane_change_direction = LaneChangeDirection.none
 
-        torque_applied = sm['carState'].steeringPressed and \
-                        ((sm['carState'].steeringTorque > 0 and self.lane_change_direction == LaneChangeDirection.left) or
-                          (sm['carState'].steeringTorque < 0 and self.lane_change_direction == LaneChangeDirection.right))
-
         blindspot_detected = ((sm['carState'].leftBlindspot and self.lane_change_direction == LaneChangeDirection.left) or
                               (sm['carState'].rightBlindspot and self.lane_change_direction == LaneChangeDirection.right))
 
         if not one_blinker or below_lane_change_speed:
           self.lane_change_state = LaneChangeState.off
-        elif torque_applied and not blindspot_detected:
+        elif not blindspot_detected:
           self.lane_change_state = LaneChangeState.laneChangeStarting
 
       # LaneChangeState.laneChangeStarting
