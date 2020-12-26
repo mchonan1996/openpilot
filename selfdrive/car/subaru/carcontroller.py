@@ -21,6 +21,9 @@ class CarControllerParams():
     self.STEER_DRIVER_MULTIPLIER = 10  # weight driver torque heavily
     self.STEER_DRIVER_FACTOR = 1       # from dbc
 
+    #SUBARU ENGINE AUTO START-STOP
+    self.FEATURE_NO_ENGINE_STOP_START = True
+
     #SUBARU STOP AND GO
     self.SNG_DISTANCE_LIMIT = 120      # distance trigger value limit for stop and go (0-255)
     self.SNG_DISTANCE_DEADBAND = 10     # deadband for SNG lead car refence distance to cater for Close_Distance sensor noises
@@ -41,6 +44,10 @@ class CarController():
 
     self.params = CarControllerParams(CP)
     self.packer = CANPacker(DBC[CP.carFingerprint]['pt'])
+
+    #SUBARU ENGINE AUTO START-STOP flags and vars
+    self.dashlights_cnt = -1
+    self.has_set_auto_ss = False
 
     #SUBARU STOP AND GO flags and vars
     self.throttle_cnt = -1
@@ -81,6 +88,21 @@ class CarController():
         can_sends.append(subarucan.create_steering_control(self.packer, apply_steer, frame, self.params.STEER_STEP))
 
       self.apply_steer_last = apply_steer
+
+    #--------------------Engine Auto Start-Stop----------------------
+    if self.params.FEATURE_NO_ENGINE_STOP_START:
+      #GLOBAL only
+      if CS.CP.carFingerprint not in PREGLOBAL_CARS:
+        #If Auto Stop Start has gone to state 3 at least once, it means either we have successfully turn off autoStopStart
+        #or driver manually turn it off before we got to it
+        if CS.autoStopStartDisabled:
+          self.has_set_auto_ss = True
+
+        #Send message to press AutoSS button, only do it once, when car starts up, after that, driver can turn it back on if they want
+        if self.dashlights_cnt != CS.dashlights_msg["Counter"] and not self.has_set_auto_ss:
+          can_sends.append(subarucan.create_dashlights(self.packer, CS.dashlights_msg, True))
+          self.dashlights_cnt = CS.dashlights_msg["Counter"]
+    #----------------------------------------------------------------
 
     #----------------------Subaru STOP AND GO------------------------
     if CS.CP.carFingerprint in PREGLOBAL_CARS:
