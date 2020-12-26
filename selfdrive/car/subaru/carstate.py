@@ -47,10 +47,6 @@ class CarState(CarStateBase):
     ret.steeringTorque = cp.vl["Steering_Torque"]['Steer_Torque_Sensor']
     ret.steeringPressed = abs(ret.steeringTorque) > STEER_THRESHOLD[self.car_fingerprint]
 
-    #@letdudiss 18 Nov 2020 Avoids LKAS and ES fault when OP apply a steer value exceed what ES allows
-    #Add steer warning to car state update to allow apply_steer 0 when steer max torque warning occurs
-    ret.steerWarning = bool(cp.vl["Steering_Torque"]['Steer_Warning'])
-    
     #@LetsDuDiss 17 Dec 2020: Detect Engine Auto Stop Start State, this will allow carcontroller.py to only
     #fake an AutoSS button once, the fake button press will repeat until the below state for AutoSS is 3
     #Assumption: State == 3 => Turned OFF (Orange/Yellow icon)
