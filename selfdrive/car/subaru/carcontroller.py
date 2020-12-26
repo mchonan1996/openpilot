@@ -7,7 +7,7 @@ from opendbc.can.packer import CANPacker
 class CarControllerParams():
   def __init__(self, CP):
     #Override STEER_MAX if car is IMPREZA 2021 due to reduced torque limit
-    if CP.carFingerprint in [REDUCED_TORQUE_CARS]:
+    if CP.carFingerprint in REDUCED_TORQUE_CARS:
       #@letdudiss 18 Nov 2020 Reduced max steer for new Subarus (Impreza 2021) with lower torque limit
       #Avoids LKAS and ES fault when OP apply a steer value exceed what ES allows
       self.STEER_MAX = 1439            # max_steer 4095, reduced for 1439 for Subaru Impreza 2021
