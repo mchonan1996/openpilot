@@ -1,12 +1,18 @@
 from selfdrive.car import apply_std_steer_torque_limits
 from selfdrive.car.subaru import subarucan
-from selfdrive.car.subaru.values import DBC, PREGLOBAL_CARS
+from selfdrive.car.subaru.values import DBC, PREGLOBAL_CARS, REDUCED_TORQUE_CARS
 from opendbc.can.packer import CANPacker
 
 
 class CarControllerParams():
-  def __init__(self):
-    self.STEER_MAX = 1439              # max_steer 4095, reduced for 1439 for Subaru Impreza 2021
+  def __init__(self, CP):
+    #Override STEER_MAX if car is IMPREZA 2021 due to reduced torque limit
+    if CP.carFingerprint in [REDUCED_TORQUE_CARS]:
+      #@letdudiss 18 Nov 2020 Reduced max steer for new Subarus (Impreza 2021) with lower torque limit
+      #Avoids LKAS and ES fault when OP apply a steer value exceed what ES allows
+      self.STEER_MAX = 1439            # max_steer 4095, reduced for 1439 for Subaru Impreza 2021
+    else:
+      self.STEER_MAX = 4095            # max_steer 4095
     self.STEER_STEP = 2                # how often we update the steer cmd
     self.STEER_DELTA_UP = 50           # torque increase per refresh, 0.8s to max
     self.STEER_DELTA_DOWN = 70         # torque decrease per refresh
@@ -24,7 +30,7 @@ class CarController():
     self.fake_button_prev = 0
     self.steer_rate_limited = False
 
-    self.params = CarControllerParams()
+    self.params = CarControllerParams(CP)
     self.packer = CANPacker(DBC[CP.carFingerprint]['pt'])
 
   def update(self, enabled, CS, frame, actuators, pcm_cancel_cmd, visual_alert, left_line, right_line):
@@ -42,7 +48,13 @@ class CarController():
       apply_steer = apply_std_steer_torque_limits(new_steer, self.apply_steer_last, CS.out.steeringTorque, self.params)
       self.steer_rate_limited = new_steer != apply_steer
 
-      if not enabled or CS.out.steerWarning:
+      #@letdudiss 18 Nov 2020 Work around for steerWarning to
+      #Avoids LKAS and ES fault when OP apply a steer value exceed what ES allows
+      #set Steering value to 0 when a steer Warning is present
+      if CS.out.steerWarning and CS.CP.carFingerprint in [REDUCED_TORQUE_CARS]:
+        apply_steer = 0
+
+      if not enabled:
         apply_steer = 0
 
       if CS.CP.carFingerprint in PREGLOBAL_CARS:

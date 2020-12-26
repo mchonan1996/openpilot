@@ -47,6 +47,8 @@ class CarState(CarStateBase):
     ret.steeringTorque = cp.vl["Steering_Torque"]['Steer_Torque_Sensor']
     ret.steeringPressed = abs(ret.steeringTorque) > STEER_THRESHOLD[self.car_fingerprint]
 
+    #@letdudiss 18 Nov 2020 Avoids LKAS and ES fault when OP apply a steer value exceed what ES allows
+    #Add steer warning to car state update to allow apply_steer 0 when steer max torque warning occurs
     ret.steerWarning = bool(cp.vl["Steering_Torque"]['Steer_Warning'])
 
     ret.cruiseState.enabled = cp.vl["CruiseControl"]['Cruise_Activated'] != 0
