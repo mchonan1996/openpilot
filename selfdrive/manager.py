@@ -179,6 +179,7 @@ managed_processes = {
   "dmonitoringmodeld": ("selfdrive/modeld", ["./dmonitoringmodeld"]),
   "modeld": ("selfdrive/modeld", ["./modeld"]),
   "rtshield": "selfdrive.rtshield",
+  "appd": "selfdrive.appd",
 }
 
 daemon_processes = {
