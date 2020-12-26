@@ -76,7 +76,7 @@ class CarController():
       #@letdudiss 18 Nov 2020 Work around for steerWarning to
       #Avoids LKAS and ES fault when OP apply a steer value exceed what ES allows
       #set Steering value to 0 when a steer Warning is present
-      if CS.out.steerWarning and CS.CP.carFingerprint in [REDUCED_TORQUE_CARS]:
+      if CS.out.steerWarning and CS.CP.carFingerprint in REDUCED_TORQUE_CARS:
         apply_steer = 0
 
       if not enabled:
