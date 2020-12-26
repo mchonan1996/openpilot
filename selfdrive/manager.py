@@ -205,6 +205,7 @@ persistent_processes = [
   'ui',
   'uploader',
   'deleter',
+  'appd',
 ]
 
 if not PC:
