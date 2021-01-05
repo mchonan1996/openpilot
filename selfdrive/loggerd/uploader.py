@@ -233,7 +233,7 @@ def uploader_fn(exit_event):
       on_wifi = is_on_wifi()
     counter += 1
 
-    d = uploader.next_file_to_upload(with_raw=allow_raw_upload and on_wifi and offroad)
+    d = uploader.next_file_to_upload(with_raw=allow_raw_upload and offroad)
     if d is None:  # Nothing to upload
       time.sleep(60 if offroad else 5)
       continue
