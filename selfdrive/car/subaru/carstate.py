@@ -145,6 +145,7 @@ class CarState(CarStateBase):
       ("Steering_Torque", 50),
       ("Dash_State", 1),
       ("BodyInfo", 1),
+      ("Engine_Auto_SS", 0),
     ]
 
     if CP.enableBsm:
